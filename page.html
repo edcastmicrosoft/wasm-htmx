@@ -1,0 +1,13 @@
+<script src="lib.js"></script>
+<script>
+  function hello() {
+    return "hello world from wasm";
+  }
+</script>
+<!-- have a button POST a click via AJAX -->
+<button hx-get="/comp.html" hx-swap="outerHTML">
+  Click Me
+</button>
+<button hx-wasm="hello" hx-swap="outerHTML">
+  Click Me from WASM
+</button>

@@ -1,0 +1,91 @@
+<!doctype html>
+
+<script type="module">
+
+  async function init() {
+
+    const { instance } = await WebAssembly.instantiateStreaming(
+      fetch("print.wasm"),
+    );
+    var mem = instance.exports.memory.buffer;
+    var ptr = 2048;
+    var len = ptr - mem.byteLength;
+    var mem = new Uint8Array(mem, ptr, 128);
+
+    var res_len = instance.exports.wasm_test(ptr, 128);
+
+    var UTF8Decoder =
+      typeof TextDecoder != "undefined" ? new TextDecoder() : undefined;
+    let output = UTF8Decoder.decode(mem);
+    console.log(output);
+    const parser = new DOMParser();
+    let fragment = parser.parseFromString(output, "text/html");
+    let root = document.getElementById("test_wasm_root");
+    root.appendChild(fragment.childNodes[0]);
+  }
+
+  async function init2() {
+    //const memory = new WebAssembly.Memory({ initial: 1, maximum: 10 });
+    const { instance } = await WebAssembly.instantiateStreaming(
+      fetch("print.wasm"),
+      // {
+      //   env: { memory }  // Pass the memory to the module
+      // }
+    );
+    const stringPtr = instance.exports.getHelloString();
+    const wasmMemory = new Uint8Array(instance.exports.memory.buffer);
+     // Read the string from WebAssembly memory
+     let resultString = "";
+    for (let i = stringPtr; wasmMemory[i] !== 0; i++) {
+        resultString += String.fromCharCode(wasmMemory[i]);
+    }
+
+    console.log(resultString);
+
+
+    function stringToPointer(str) {
+      const encoder = new TextEncoder();
+      const encodedString = encoder.encode(str);
+      const length = encodedString.length;
+
+      const ptr = instance.exports.malloc(length + 1); // Allocate memory
+      const memory = new Uint8Array(instance.exports.memory.buffer);
+      memory.set(encodedString, ptr);
+      memory[ptr + length] = 0; // Null terminate the string
+
+      return ptr;
+    }
+
+
+    const jsString = "Hello fromdsfs JavaScript!";
+    const ptr = stringToPointer(jsString);
+
+    var t = instance.exports.firstLetter(ptr);
+    instance.exports.free(ptr);
+
+    console.log(t);
+
+    // var mem = instance.exports.memory.buffer;
+    // var ptr = 2048;
+    // var len = ptr - mem.byteLength;
+    // var mem = new Uint8Array(mem, ptr, 128);
+
+    // var res_len = instance.exports.wasm_test(ptr, 128);
+
+    // var UTF8Decoder =
+    //   typeof TextDecoder != "undefined" ? new TextDecoder() : undefined;
+    // let output = UTF8Decoder.decode(mem);
+    // console.log(output);
+    // const parser = new DOMParser();
+    // let fragment = parser.parseFromString(output, "text/html");
+    // let root = document.getElementById("test_wasm_root");
+    // root.appendChild(fragment.childNodes[0]);
+  }
+
+  // init();
+  init2();
+</script>
+
+<body>
+  <div id="test_wasm_root"></div>
+</body>
