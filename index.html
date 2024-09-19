@@ -32,15 +32,16 @@
       //   env: { memory }  // Pass the memory to the module
       // }
     );
-    const stringPtr = instance.exports.getHelloString();
-    const wasmMemory = new Uint8Array(instance.exports.memory.buffer);
-     // Read the string from WebAssembly memory
-     let resultString = "";
-    for (let i = stringPtr; wasmMemory[i] !== 0; i++) {
-        resultString += String.fromCharCode(wasmMemory[i]);
-    }
-
-    console.log(resultString);
+    
+    // // Hello from WebAssembly!
+    // const stringPtr = instance.exports.getHelloString();
+    // const wasmMemory = new Uint8Array(instance.exports.memory.buffer);
+    // // Read the string from WebAssembly memory
+    // let resultString = "";
+    // for (let i = stringPtr; wasmMemory[i] !== 0; i++) {
+    //   resultString += String.fromCharCode(wasmMemory[i]);
+    // }
+    // console.log(resultString);
 
 
     function stringToPointer(str) {
@@ -56,14 +57,52 @@
       return ptr;
     }
 
+    function pointerToString(ptr) {
+      const memory = new Uint8Array(instance.exports.memory.buffer);
+      let str = "";
+      for (let i = ptr; memory[i] !== 0; i++) {
+        str += String.fromCharCode(memory[i]);
+      }
+      return str;
+    }
+    function printBuffer(length) {
+      const memory = new Uint8Array(instance.exports.memory.buffer);
+      let str = "";
+      for (let i = 0; i < length; i++) {
+        str += String.fromCharCode(memory[i]);
+      }
+      console.log(str);
+    }
 
-    const jsString = "Hello fromdsfs JavaScript!";
-    const ptr = stringToPointer(jsString);
+    //Hello from WebAssembly!
+    // const jsString = "Hello fromdsfs JavaScript!";
+    // const ptr = stringToPointer(jsString);
+    // var t = instance.exports.firstLetter(ptr);
+    // instance.exports.free(ptr);
+    // console.log(t);
 
-    var t = instance.exports.firstLetter(ptr);
-    instance.exports.free(ptr);
+    const jsString1 = "/hello";
+    const ptr1 = stringToPointer(jsString1);
+    var ptrResult = instance.exports.wasm_engine(ptr1);
+    var result = pointerToString(ptrResult);
+    console.log(result);
 
-    console.log(t);
+
+    printBuffer(100);
+    //instance.exports.free(ptr1);
+    //console.log(ptrResult);
+
+    // const wasmMemory1 = new Uint8Array(instance.exports.memory.buffer);
+    // // Read the string from WebAssembly memory
+    // let resultString1 = "";
+    // for (let i = ptrResult; wasmMemory1[i] !== 0; i++) {
+    //   resultString1 += String.fromCharCode(wasmMemory1[i]);
+    // }
+
+    // console.log(resultString1);
+
+
+
 
     // var mem = instance.exports.memory.buffer;
     // var ptr = 2048;

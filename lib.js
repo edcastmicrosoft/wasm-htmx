@@ -4839,7 +4839,7 @@ var htmx = (function () {
         })
         triggerEvent(elt, 'htmx:beforeSend', responseInfo)
         const params = useUrlParams ? null : encodeParamsForBody(xhr, elt, filteredFormData)
-        xhr.send(params)
+//        xhr.send(params)
         return promise
     }
 
