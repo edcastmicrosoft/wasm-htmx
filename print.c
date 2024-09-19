@@ -33,73 +33,83 @@ uint32_t malloc(uint32_t size)
   heap_offset += size;
   return current_offset;
 }
-char *concatenate(const char *str1, const char *str2, char *result)
-{
-  const char *p = str1;
-  char *q = result;
 
-  // Copy the first string to the result
-  while (*p)
-  {
-    *q++ = *p++;
-  }
+// char *my_strcat(char *dest, const char *src)
+// {
+//   char *dest_ptr = dest;
 
-  // Copy the second string to the result
-  p = str2;
-  while (*p)
-  {
-    *q++ = *p++;
-  }
+//   // Move pointer to the end of the destination string
+//   while (*dest_ptr)
+//   {
+//     dest_ptr++;
+//   }
 
-  // Null-terminate the result
-  *q = '\0';
+//   // Copy the source string to the destination string
+//   while (*src)
+//   {
+//     *dest_ptr++ = *src++;
+//   }
 
-  return result;
-}
+//   *dest_ptr = '\0'; // Null-terminate the result
+//   return dest;
+// }
 
-char *concatenate_html_table(char *result)
-{
-  return "<table>\n<tr><td>Row 1, Cell 1</td><td>Row 1, Cell 2</td></tr>\n<tr><td>Row 1, Cell 1</td><td>Row 1, Cell 2</td></tr>\n</table>\n";
-  const char *table_open = "<table>\n";
-  // const char* rows[] = {
-  //     "<tr><td>Row 1, Cell 1</td><td>Row 1, Cell 2</td></tr>\n",
-  //     "<tr><td>Row 2, Cell 1</td><td>Row 2, Cell 2</td></tr>\n"
-  // };
-  const char *rows[] = {"asdsa"};
-  size_t row_count = sizeof(rows);
-  const char *table_close = "</table>\n";
-  const char *p;
-  char *q = result;
+// char *concatenate_html_table(char *result)
+// {
+//   //char dest[100] = "";
+//   const char *dest = "<table>3"; 
+//   my_strcat(dest, "<table>"); // Concatenate src to dest
+//   my_strcat(dest, "</table>"); // Concatenate src to dest
+//   return dest;
 
-  // Copy the opening table tag
-  p = table_open;
-  while (*p)
-  {
-    *q++ = *p++;
-  }
+//   //printf("%s\n", dest); // Print the concatenated string
+//   return 0;
+//   const char *table_open1 = "<table>3";
+//   const char *temp = "from cont 2";
+//   const char *table_open2 = my_strcat(table_open1, temp);
+//   return table_open1;
+//   return "<table>\n<tr><td>Row 1, Cell 1</td><td>Row 1, Cell 2</td></tr>\n<tr><td>Row 1, Cell 1</td><td>Row 1, Cell 2</td></tr>\n</table>\n";
+//   const char *table_open = "<table>\n";
+//   // const char* rows[] = {
+//   //     "<tr><td>Row 1, Cell 1</td><td>Row 1, Cell 2</td></tr>\n",
+//   //     "<tr><td>Row 2, Cell 1</td><td>Row 2, Cell 2</td></tr>\n"
+//   // };
+//   const char *rows[] = {"asdsa"};
+//   size_t row_count = sizeof(rows);
+//   const char *table_close = "</table>\n";
+//   const char *p;
+//   char *q = result;
 
-  // Copy each row into the result
-  for (size_t i = 0; i < row_count; ++i)
-  {
-    p = rows[i];
-    while (*p)
-    {
-      *q++ = *p++;
-    }
-  }
+//   // Copy the opening table tag
+//   p = table_open;
+//   while (*p)
+//   {
+//     *q++ = *p++;
+//   }
 
-  // Copy the closing table tag
-  p = table_close;
-  while (*p)
-  {
-    *q++ = *p++;
-  }
+//   // Copy each row into the result
+//   for (size_t i = 0; i < row_count; ++i)
+//   {
+//     p = rows[i];
+//     while (*p)
+//     {
+//       *q++ = *p++;
+//     }
+//   }
 
-  // Null-terminate the result
-  *q = '\0';
+//   // Copy the closing table tag
+//   p = table_close;
+//   while (*p)
+//   {
+//     *q++ = *p++;
+//   }
 
-  return result;
-}
+//   // Null-terminate the result
+//   *q = '\0';
+
+//   return result;
+// }
+
 
 uint32_t getHelloString()
 {
@@ -144,15 +154,42 @@ char firstLetter(const char *mem)
   // }
   // return a[0];  // Return the first character
 }
+const char *concatenate_strings(const char *a, const char *b)
+{
+  if (a == NULL || b == NULL)
+  {
+    return NULL; // Return NULL if either input is NULL
+  }
+
+  uint32_t len_a = strlen(a);
+  uint32_t len_b = strlen(b);
+  uint32_t len = len_a + len_b + 1; // Include null terminator
+  uint32_t ptr = malloc(len);
+  memcpy((void *)ptr, a, len_a); // Copy first string to memory
+  memcpy((void *)(ptr + len_a), b, len_b); // Copy second string to memory
+  return (unsigned char *)ptr; // Return pointer to the concatenated string
+}
+
 const char *get(const char *str)
 {
   if (compareStringsx(str, "/hello") == 0)
   {
-    char result[1024];
+      char *result = "";
+      result = concatenate_strings(result,"<table>");
+      result = concatenate_strings(result,"<tr>");
+      for(int i=0;i<2;i++){
+        result = concatenate_strings(result,"<td>1</td>");
+        result = concatenate_strings(result,"<td>2</td>");
+        result = concatenate_strings(result,"<td>3</td>");
+        result = concatenate_strings(result,"<td>4</td>");
+      }      
+      result = concatenate_strings(result,"</tr>");      
+      result = concatenate_strings(result,"</table>");  
+      return result; 
     // const char *table = concatenate_html_table(result);
-    return concatenate_html_table(result);
-    //return result;
-    // return "You said hello!";
+    //return concatenate_html_table(result);
+    // return result;
+    //  return "You said hello!";
   }
   else if (compareStringsx(str, "/goodbye") == 0)
   {
@@ -179,22 +216,6 @@ const char *get(const char *str)
 //         *p++ = (unsigned char)c;
 //     }
 //     return s;
-// }
-// char* my_strcat(char* dest, const char* src) {
-//     char* dest_ptr = dest;
-
-//     // Move pointer to the end of the destination string
-//     while (*dest_ptr) {
-//         dest_ptr++;
-//     }
-
-//     // Copy the source string to the destination string
-//     while (*src) {
-//         *dest_ptr++ = *src++;
-//     }
-
-//     *dest_ptr = '\0';  // Null-terminate the result
-//     return dest;
 // }
 
 // const char* generate_html_table(const char* input_data) {
