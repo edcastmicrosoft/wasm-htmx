@@ -5288,7 +5288,9 @@ var htmx = (function () {
         // }
 
         // var serverResponse = responseInfo.pathInfo.requestPath
-        var serverResponse = window[responseInfo.pathInfo.requestPath]();
+        // var serverResponse = window[responseInfo.pathInfo.requestPath]();
+        var serverResponse = wasmEngine(responseInfo.pathInfo.requestPath);
+        
         
         //var serverResponse = "hey arnold";
         /** @type HtmxBeforeSwapDetails */

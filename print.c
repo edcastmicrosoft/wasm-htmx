@@ -2,11 +2,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define WASM_MEMORY_SIZE 65536 // 64 KB for demonstration
+//#define WASM_MEMORY_SIZE 65536 // 64 KB for demonstration
 
 // Simple linear memory allocator
 uint32_t heap_offset = 0;
-uint8_t memory1[WASM_MEMORY_SIZE];
+//uint8_t memory1[WASM_MEMORY_SIZE];
 
 void *memcpy(void *dest, const void *src, size_t n)
 {
@@ -172,24 +172,22 @@ const char *concatenate_strings(const char *a, const char *b)
 
 const char *get(const char *str)
 {
-  if (compareStringsx(str, "/hello") == 0)
+  if (compareStringsx(str, "/table") == 0)
   {
       char *result = "";
       result = concatenate_strings(result,"<table>");
-      result = concatenate_strings(result,"<tr>");
+      
       for(int i=0;i<2;i++){
+        result = concatenate_strings(result,"<tr>");
         result = concatenate_strings(result,"<td>1</td>");
         result = concatenate_strings(result,"<td>2</td>");
         result = concatenate_strings(result,"<td>3</td>");
         result = concatenate_strings(result,"<td>4</td>");
+        result = concatenate_strings(result,"</tr>");
       }      
-      result = concatenate_strings(result,"</tr>");      
+            
       result = concatenate_strings(result,"</table>");  
       return result; 
-    // const char *table = concatenate_html_table(result);
-    //return concatenate_html_table(result);
-    // return result;
-    //  return "You said hello!";
   }
   else if (compareStringsx(str, "/goodbye") == 0)
   {
